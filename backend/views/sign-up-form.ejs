@@ -8,9 +8,7 @@
     <title>Document</title>
   </head>
   <body>
-    <% if (error) { %> <% error.map((e) => { %>
-    <p><%= e.path %>: <%= e.msg %></p>
-    <%}) } %>
+  
     <form
       action="/sign-up"
       method="post">
