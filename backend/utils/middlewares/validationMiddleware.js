@@ -14,7 +14,7 @@ const signUpValidationRules = () => [
   body("username")
     .trim()
     .isLength({ min: 5 })
-    .withMessage("must have username and atleast 5 characters")
+    .withMessage("must have username and at least 5 characters")
     .escape(),
   body("password").isLength({ min: 5 }),
   body("confirmPassword")
@@ -24,7 +24,6 @@ const signUpValidationRules = () => [
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.log("validation", errors.array());
     return next(errors.array());
   }
   next();
