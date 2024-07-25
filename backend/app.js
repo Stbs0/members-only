@@ -4,6 +4,8 @@ const session = require("express-session");
 const pool = require("./db/pool");
 const PgStore = require("connect-pg-simple")(session);
 const signUpRouter = require("./routers/signUpRouter");
+const errorHandlerMiddleware = require("./utils/middlewares/errorHandlerMiddleware");
+const requestLogger = require("./utils/middlewares/requestLogger");
 const app = express();
 
 const store = new PgStore({
@@ -15,7 +17,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
-console.log(__dirname);
+
+//middleware
+app.use(requestLogger);
 //session
 app.use(
   session({
@@ -33,4 +37,5 @@ app.use(
 app.use("/", homeRouter);
 app.use("/sign-up",signUpRouter);
 
+app.use(errorHandlerMiddleware);
 app.listen(3000, () => console.log("Server started on port 3000"));

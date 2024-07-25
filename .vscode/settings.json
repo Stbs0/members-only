@@ -1,0 +1,11 @@
+{
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "driver": "PostgreSQL",
+      "name": "members_only",
+      "connectString": "postgres://stbs:1234@localhost:5432/members_only"
+    }
+  ]
+}
