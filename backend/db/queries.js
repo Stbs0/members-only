@@ -49,4 +49,12 @@ exports.getUserById = async (id) => {
   const { rows } = await pool.query(query, values);
   return rows[0];
 }
+exports.getAllMessages = async()=>{
+  const query = `
+  SELECT * FROM messages;
+  `
+
+  const { rows } = await pool.query(query)
+  return rows
+}
 

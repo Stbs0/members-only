@@ -37,9 +37,9 @@ app.use(
     },
   }),
 );
-require('./utils/passport/passport')
+require("./utils/passport/passport");
 
-app.use(passport.session())
+app.use(passport.session());
 
 app.use((req, res, next) => {
   console.log(req.session);
@@ -48,11 +48,9 @@ app.use((req, res, next) => {
 });
 //routers
 app.use("/", homeRouter);
-app.use("/sign-up",signUpRouter);
-app.use("/join-club",joinClubRouter);
-app.use('/log-in',logInRouter)
-
-
+app.use("/sign-up", signUpRouter);
+app.use("/join-club", joinClubRouter);
+app.use("/log-in", logInRouter);
 
 app.use(middlewares.errorHandlerMiddleware);
 app.listen(3000, () => console.log("Server started on port 3000"));
