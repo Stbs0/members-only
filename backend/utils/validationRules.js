@@ -29,14 +29,19 @@ exports.joinClubRules = () => [
     .withMessage("must have a club")
     .escape(),
   body("passcode")
-    .isLength({ min: 1 })
-    .escape()
-    .withMessage("must have a passcode")
-    .custom(async (value) => {
-      const passcode = await db.getClubPasscode(value);
+    .isLength({ min: 1 }).withMessage("must have a passcode")
+    .custom(async (value,{req}) => {
+      console.log('inside passcode ',value)
+      console.log("inside club ", req.body);
+      const passcode = await db.getClubPasscode(req.body.club);
+      if (!passcode) {
+        throw new Error("club not found");
+      }
       if (value !== passcode.passcode) {
         throw new Error("wrong passcode");
       }
       return true;
-    }),
+    })
+    .trim()
+    .escape(),
 ];

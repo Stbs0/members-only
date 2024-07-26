@@ -17,20 +17,36 @@ exports.getClubPasscode = async (name) => {
   const values = [name];
 
   const result = await pool.query(query, values);
-  console.log("passcode",result);
   const rows = result.rows;
   return rows[0];
 };
 exports.saveUserInClub = async (username, clubName) => {
   const query = `
-    INSERT INTO users_clubs (user_id,club_id)
+    INSERT INTO user_clubs (user_id,club_id)
     VALUES (
     (SELECT id FROM users where username = $1 ),
-    (SELECT id FROM clubs where name = $2 ),
+    (SELECT id FROM clubs where name = $2 )
     ); 
     `;
   const values = [username, clubName];
 
-  await pool.query(query, values);
+  await pool.query(query, values); 
  
 };
+exports.getUserByUsername= async (username) => {
+  const query = `
+    SELECT * FROM users WHERE username = $1;
+    `;
+  const values = [username];
+  const { rows } = await pool.query(query, values);
+  return rows[0];
+}
+exports.getUserById = async (id) => {
+  const query = `
+    SELECT * FROM users WHERE id = $1;
+    `;
+  const values = [id];
+  const { rows } = await pool.query(query, values);
+  return rows[0];
+}
+

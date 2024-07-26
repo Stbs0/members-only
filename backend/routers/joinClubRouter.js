@@ -8,8 +8,8 @@ router.get("/", (req, res) => {
 
 router.post(
   "/",
-//   rules.joinClubRules(),
-//   middlewares.validate,
+  rules.joinClubRules(),
+  middlewares.validate,
   joinClubController,
 );
 
