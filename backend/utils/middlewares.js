@@ -34,8 +34,6 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   });
 };
 const isAuthenticated = asyncHandler((req, res, next) => {
-  
-
   if (req.isAuthenticated() && String(req.user.id) === req.params.id) {
     next();
   } else {
@@ -47,9 +45,14 @@ const isAuthenticated = asyncHandler((req, res, next) => {
   }
 });
 
+const unknownEndpoint = asyncHandler((req, res, next) => {
+  throw new CustomError(404, "endpoint not found", "unknown endpoint");
+});
+
 module.exports = {
   validate,
   requestLogger,
   errorHandlerMiddleware,
   isAuthenticated,
+  unknownEndpoint,
 };

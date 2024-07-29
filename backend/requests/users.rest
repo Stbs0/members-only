@@ -11,6 +11,7 @@ Cookie: connect.sid=s%3A7kyKrpzo8uMlShD_eB8NGFGCBNraxUhH.S%2FnxM9JSt%2BnpPBvKqsp
 GET http://localhost:3000/api/users/11
 Content-Type: application/json
 Cookie: connect.sid=s%3A7kyKrpzo8uMlShD_eB8NGFGCBNraxUhH.S%2FnxM9JSt%2BnpPBvKqsph6tIHKffMHIbJdDJn73mpDjk
+### @response
 
 ###
 DELETE http://localhost:3000/api/users/12

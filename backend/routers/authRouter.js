@@ -3,6 +3,7 @@ const passport = require("passport");
 const authController = require("../controllers/authController");
 const validationRules = require("../utils/validationRules");
 const middlewares = require("../utils/middlewares");
+const asyncHandler = require("express-async-handler");
 
 router.get("/register", (req, res) => {
   res.render("sign-up-form");
@@ -26,5 +27,14 @@ router.post(
     successRedirect: "/",
   }),
 );
+
+router.post("/logout",  (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/login");
+  });
+});
 
 module.exports = router;

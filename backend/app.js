@@ -52,7 +52,7 @@ app.use("/api/auth", routers.authRouter);
 // app.use("/api/messages", routers.joinClubRouter);
 
 // app.use("/create-message", routers.createMessageRouter);
-
+app.use(middlewares.unknownEndpoint);
 app.use(middlewares.errorHandlerMiddleware);
 app.listen(3000, () => console.log("Server started on port 3000"));
 

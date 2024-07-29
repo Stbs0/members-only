@@ -1,8 +1,16 @@
 POST http://localhost:3000/api/auth/login
 Content-Type: application/json
-Cookie: connect.sid=s%3AEvmqIr1wDsgSfKPbmaNQqC4QMK-B04k7.1ko07SKEp71Hy7NGC9uWtt1WIl3VdgD%2FtwXmAISI0O8
 
 {
-    "username":"zzzzz",
-    "password":"zzzzz"
+    "username":"wwwww",
+    "password":"wwwww"
 }
+
+###
+
+POST http://localhost:3000/api/auth/logout
+Content-Type: application/json
+
+
+
+###
