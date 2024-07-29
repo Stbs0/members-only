@@ -40,7 +40,6 @@ WHERE
     `;
   const values = [id];
   const { rows } = await pool.query(query, values);
-  console.log("userInfo", rows[0]);
 
   return rows[0];
 };

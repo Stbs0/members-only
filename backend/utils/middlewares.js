@@ -7,7 +7,7 @@ const validate = (req, res, next) => {
   const errors = validationResult(req);
   console.log(errors);
   if (!errors.isEmpty()) {
-    return next(errors.array());
+    throw new CustomError(400, "invalid input", errors.array());
   }
   next();
 };
@@ -34,12 +34,15 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   });
 };
 const isAuthenticated = asyncHandler((req, res, next) => {
-  if (req.isAuthenticated()) {
+  
+
+  if (req.isAuthenticated() && String(req.user.id) === req.params.id) {
     next();
   } else {
     throw new CustomError(
       401,
-      "you dont have permission to access the resource","middleware auth"
+      "you dont have permission to access the resource",
+      "middleware auth",
     );
   }
 });

@@ -23,7 +23,7 @@ const updateUserInfo = asyncHandler(async (req, res, next) => {
   }
 });
 const deleteUser = asyncHandler(async (req, res, next) => {
-  const userId = req.params.id;
+  const userId = req.user.id;
   const user = await db.deleteUserDB(userId);
   if (!user) {
     throw new CostumeError(404, "user not found", 2);
