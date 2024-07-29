@@ -18,13 +18,12 @@
     -- (SELECT id FROM users where username = $1 ),
     -- (SELECT id FROM clubs where name = $2 ),
     -- ); 
-    ALTER TABLE messages
-ADD COLUMN club_id INTEGER;
+   DELETE from messages;
 
-ALTER TABLE messages
-ADD CONSTRAINT club_id
-FOREIGN KEY (club_id)
-REFERENCES clubs(id)
-ON DELETE CASCADE;
+-- ALTER TABLE messages
+-- ADD CONSTRAINT club_id
+-- FOREIGN KEY (club_id)
+-- REFERENCES clubs(id)
+-- ON DELETE CASCADE;
 
     

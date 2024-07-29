@@ -1,0 +1,9 @@
+POST http://localhost:3000/api/messages
+Content-Type: application/json
+
+{
+    "clubId":1,
+    "title":"bbbbbbbbbbbb",
+    "message":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+
+}

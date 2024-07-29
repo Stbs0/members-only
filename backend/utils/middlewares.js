@@ -1,16 +1,7 @@
-const { validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 const CustomError = require("../utils/ErrorClass");
-// validation middlewares
 
-const validate = (req, res, next) => {
-  const errors = validationResult(req);
-  console.log(errors);
-  if (!errors.isEmpty()) {
-    throw new CustomError(400, "invalid input", errors.array());
-  }
-  next();
-};
+
 
 // logger middleware
 
@@ -30,13 +21,12 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     return res.status(err.statusCode).json({ ...err, message: err.message });
   }
   res.status(500).json({
-    message: "Internal Server Error",
+    message: "Internal Server Error", err
   });
 };
 
 // auth middleware
 const isAuthenticated = asyncHandler((req, res, next) => {
-  console.log(req.isUnauthenticated());
   if (req.isAuthenticated()) {
     return next();
   } else {
@@ -66,7 +56,6 @@ const unknownEndpoint = asyncHandler((req, res, next) => {
 });
 
 module.exports = {
-  validate,
   requestLogger,
   errorHandlerMiddleware,
   isAuthenticated,

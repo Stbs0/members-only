@@ -1,4 +1,3 @@
-const CustomError = require("../utils/ErrorClass");
 const pool = require("./pool");
 
 const getClubPasscode = async (clubId) => {
@@ -28,8 +27,21 @@ const saveUserInClub = async (userId, ClubId) => {
     return error;
   }
 };
+const getClub = async (clubId) => {
+  try {
+    const query = `
+          SELECT * FROM clubs WHERE id = $1;
+          `;
+    const values = [clubId];
+    const { rows } = await pool.query(query, values);
+    return rows;
+  } catch (error) {
+    return error;
+  }
+};
 
 module.exports = {
   getClubPasscode,
   saveUserInClub,
+  getClub,
 };

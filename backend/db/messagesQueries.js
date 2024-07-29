@@ -10,7 +10,7 @@ exports.getAllMessages = async () => {
     console.log("db messgaes", rows);
     return rows;
   } catch (error) {
-    return new CustomError(500, "internal server error", error);
+    return error;
   }
 };
 exports.getMembersMessages = async (clubs) => {
@@ -35,7 +35,7 @@ exports.getMembersMessages = async (clubs) => {
       });
     });
   } catch (error) {
-    return new CustomError(500, "internal server error", error);
+    return error
   }
 };
 exports.saveMessage = async (title, message, userId, clubId) => {
@@ -49,6 +49,6 @@ exports.saveMessage = async (title, message, userId, clubId) => {
     const { rows } = await pool.query(query, values);
     return rows[0];
   } catch (error) {
-    return new CustomError(500, "internal server error", error);
+    return error;
   }
 };

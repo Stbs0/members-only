@@ -3,11 +3,12 @@ const CostumeError = require("../utils/ErrorClass");
 const asyncHandler = require("express-async-handler");
 
 const getUserInfo = asyncHandler(async (req, res, next) => {
-  const userId = req.params.id;
+  const userId = req.user.id;
   const user = await db.getUserById(userId);
   if (!user) {
     throw new CostumeError(404, "user not found", 0);
   } else {
+    delete user.hash;
     res.json(user);
   }
 });

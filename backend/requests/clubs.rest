@@ -1,6 +1,6 @@
-POST http://localhost:3000/api/clubs/1/join
+POST http://localhost:3000/api/clubs/2/join
 Content-Type: application/json
 
 {
-    "passcode":"I love books"
+    "passcode":"I love sci-fi"
 }
