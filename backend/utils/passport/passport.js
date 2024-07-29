@@ -6,7 +6,6 @@ passport.use(
   new LocalStrategy(async (username, password, done) => {
     try {
       const user = await db.getUserByUsername(username);
-      console.log("LocalStrategy", user);
       if (!user) {
         return done(null, false, { message: "Incorrect username" });
       }
@@ -22,12 +21,13 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  console.log("serializeUser",user)
   done(null, user.id);
 });
 passport.deserializeUser(async (id, done) => {
   const user = await db.getUserById(id);
-  console.log("deserializeUser",user)
+  const userClubs = await db.getUserClubs(id);
+  console.log(userClubs)
+  user.clubs = userClubs
   done(null, user);
 });
 

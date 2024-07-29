@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const encryption = require("../utils/encryption");
 const db = require("../db/queries");
 
-const createUserController = asyncHandler(async (req, res) => {
+const createUserController = asyncHandler(async (req, res,next) => {
   const { firstName, lastName, username, password } = req.body;
 
   const passwordHash = await encryption.encryptPassword(password);
@@ -12,9 +12,8 @@ const createUserController = asyncHandler(async (req, res) => {
     username,
     passwordHash,
   );
-  console.log("signup", rows);
   req.user = rows;
-  res.redirect("/");
+  next()
 });
 
 module.exports = {

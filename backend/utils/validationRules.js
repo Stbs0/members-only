@@ -31,8 +31,6 @@ exports.joinClubRules = () => [
   body("passcode")
     .isLength({ min: 1 }).withMessage("must have a passcode")
     .custom(async (value,{req}) => {
-      console.log('inside passcode ',value)
-      console.log("inside club ", req.body);
       const passcode = await db.getClubPasscode(req.body.club);
       if (!passcode) {
         throw new Error("club not found");
@@ -45,3 +43,15 @@ exports.joinClubRules = () => [
     .trim()
     .escape(),
 ];
+exports.createMessage = () => [
+  body("message")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("must have a message")
+    .escape(),
+  body("title")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("must have a title")
+    .escape(),
+]

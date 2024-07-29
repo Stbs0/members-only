@@ -1,4 +1,6 @@
 const pool = require("./pool");
+
+// user
 exports.saveUserIndb = async (firstName, lastName, username, passwordHash) => {
   const query = `
         INSERT INTO users (first_name, last_name, username, hash)
@@ -10,16 +12,28 @@ exports.saveUserIndb = async (firstName, lastName, username, passwordHash) => {
   return rows;
 };
 
-exports.getClubPasscode = async (name) => {
+exports.getUserByUsername = async (username) => {
   const query = `
-    SELECT passcode FROM clubs WHERE name like $1;
+    SELECT * FROM users WHERE username = $1;
     `;
-  const values = [name];
-
-  const result = await pool.query(query, values);
-  const rows = result.rows;
+  const values = [username];
+  const { rows } = await pool.query(query, values);
   return rows[0];
 };
+
+exports.getUserById = async (id) => {
+  const query = `
+   SELECT * FROM 
+    users
+WHERE 
+    users.id = $1;
+    `;
+  const values = [id];
+  const { rows } = await pool.query(query, values);
+  return rows[0];
+};
+
+// clubs
 exports.saveUserInClub = async (username, clubName) => {
   const query = `
     INSERT INTO user_clubs (user_id,club_id)
@@ -30,31 +44,43 @@ exports.saveUserInClub = async (username, clubName) => {
     `;
   const values = [username, clubName];
 
-  await pool.query(query, values); 
- 
+  await pool.query(query, values);
 };
-exports.getUserByUsername= async (username) => {
+exports.getClubPasscode = async (name) => {
   const query = `
-    SELECT * FROM users WHERE username = $1;
+    SELECT passcode FROM clubs WHERE name like $1;
     `;
-  const values = [username];
-  const { rows } = await pool.query(query, values);
+  const values = [name];
+
+  const result = await pool.query(query, values);
+  const rows = result.rows;
   return rows[0];
-}
-exports.getUserById = async (id) => {
+};
+exports.getUserClubs = async (userId) => {
   const query = `
-    SELECT * FROM users WHERE id = $1;
+    SELECT DISTINCT club_id FROM user_clubs WHERE user_id = $1;
     `;
-  const values = [id];
+  const values = [userId];
   const { rows } = await pool.query(query, values);
-  return rows[0];
-}
-exports.getAllMessages = async()=>{
+  return rows.map((club) => club.club_id);
+};
+
+// messages
+exports.getAllMessages = async () => {
   const query = `
-  SELECT * FROM messages;
-  `
+  SELECT messages.id, title, text, timestamp, club_id FROM messages JOIN clubs ON messages.club_id = clubs.id;
+  `;
 
-  const { rows } = await pool.query(query)
-  return rows
-}
-
+  const { rows } = await pool.query(query);
+  console.log("db messgaes",rows);
+  return rows;
+};
+exports.saveMessage = async (title, message, userId) => {
+  const query = `
+    INSERT INTO messages (title, text, user_id)
+    VALUES ($1, $2, $3)
+   
+    `;
+  const values = [title, message, userId];
+  await pool.query(query, values);
+};

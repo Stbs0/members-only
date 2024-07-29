@@ -1,13 +1,11 @@
 const express = require("express");
-const homeRouter = require("./routers/homeRouter");
 const session = require("express-session");
 const passport = require("passport");
 const pool = require("./db/pool");
 const PgStore = require("connect-pg-simple")(session);
-const signUpRouter = require("./routers/signUpRouter");
-const joinClubRouter = require("./routers/joinClubRouter");
-const logInRouter = require("./routers/logInRouter");
-
+// import routers
+const routers = require("./routers/indexRouter");
+// import middlewares
 const middlewares = require("./utils/middlewares");
 const app = express();
 
@@ -43,14 +41,17 @@ app.use(passport.session());
 
 app.use((req, res, next) => {
   console.log(req.session);
-  console.log(req.user);
+  console.log(req?.user);
   next();
 });
 //routers
-app.use("/", homeRouter);
-app.use("/sign-up", signUpRouter);
-app.use("/join-club", joinClubRouter);
-app.use("/log-in", logInRouter);
+app.use("/", routers.homeRouter);
+app.use("/sign-up", routers.signUpRouter);
+app.use("/join-club", routers.joinClubRouter);
+app.use("/log-in", routers.logInRouter);
+app.use("/log-out", routers.logoutRouter);
+app.use("/create-message", routers.createMessageRouter);
 
 app.use(middlewares.errorHandlerMiddleware);
 app.listen(3000, () => console.log("Server started on port 3000"));
+

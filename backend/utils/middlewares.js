@@ -1,9 +1,10 @@
 const { validationResult } = require("express-validator");
-
+const asyncHandler = require("express-async-handler");
 // validation middlewares
 
 const validate = (req, res, next) => {
   const errors = validationResult(req);
+  console.log(errors);
   if (!errors.isEmpty()) {
     return next(errors.array());
   }
@@ -37,13 +38,26 @@ const errorHandlerMiddleware = (err, req, res, next) => {
       }),
     });
   }
-  if (err) {
+  if (err.name === "unAuthenticated") {
+    res.send(err.message);
   }
+
   next(err);
+};
+const isAutherized = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    next();
+  } else {
+    next({
+      message: "you dont have access to the resource",
+      name: "unAuthenticated",
+    });
+  }
 };
 
 module.exports = {
   validate,
   requestLogger,
   errorHandlerMiddleware,
+  isAutherized,
 };
