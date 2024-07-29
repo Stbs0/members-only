@@ -1,22 +1,22 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const db = require("../../db/queries");
-const encryption = require("../encryption");
-const CostumeError = require("../../utils/ErrorClass");
+const db = require("../db/queries");
+const encryption = require("./encryption");
+const CostumeError = require("./ErrorClass");
 passport.use(
   new LocalStrategy(async (username, password, done) => {
     try {
       const user = await db.getUserByUsername(username);
-      console.log(user)
+      console.log(user);
       if (!user) {
         return done(null, false, { message: "Incorrect username" });
       }
       const isMatch = await encryption.checkPassword(password, user.hash);
-      console.log(isMatch)
+      console.log(isMatch);
       if (!isMatch) {
         return done(null, false, { message: "Incorrect password" });
       }
-      console.log("first")
+      console.log("first");
       return done(null, user);
     } catch (err) {
       return done(err);
@@ -36,11 +36,10 @@ passport.deserializeUser(async (id, done) => {
 
     const userClubs = await db.getUserClubs(id);
     user.clubs = userClubs;
-
+console.log("Successfully deserialized user");
     done(null, user); // Successfully deserialized user
   } catch (error) {
     // Handle any errors that occur during the asynchronous operations
     done(error, null);
   }
 });
-

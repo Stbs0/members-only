@@ -1,5 +1,7 @@
 const { body } = require("express-validator");
-const db = require("../db/queries");
+const db = require("../db/index");
+const CustomError = require("../utils/ErrorClass");
+
 exports.signUp = () => [
   body("firstName")
     .trim()
@@ -29,28 +31,26 @@ exports.logIn = () => [
     .withMessage("must have username and at least 5 characters")
     .escape(),
   body("password").isLength({ min: 5 }),
-]
+];
 
-exports.joinClubRules = () => [
-  body("club")
-    .trim()
-    .isLength({ min: 1 })
-    .withMessage("must have a club")
-    .escape(),
+exports.joinClub = () => [
   body("passcode")
-    .isLength({ min: 1 }).withMessage("must have a passcode")
-    .custom(async (value,{req}) => {
-      const passcode = await db.getClubPasscode(req.body.club);
-      if (!passcode) {
-        throw new Error("club not found");
+    .isLength({ min: 1 })
+    .withMessage("must have a passcode")
+    .custom(async (value, { req }) => {
+      const isPresent = req.user.clubs.includes(Number(req.params.clubId));
+      if (isPresent) {
+        throw new CustomError(400, "already joined");
       }
-      if (value !== passcode.passcode) {
-        throw new Error("wrong passcode");
+      const passcode = await db.getClubPasscode(req.params.clubId);
+      if (!passcode) {
+        throw new CustomError(500, "club not found");
+      }
+      if (value !== passcode) {
+        throw new CustomError(400, "wrong passcode");
       }
       return true;
-    })
-    .trim()
-    .escape(),
+    }),
 ];
 exports.createMessage = () => [
   body("message")
@@ -63,4 +63,4 @@ exports.createMessage = () => [
     .isLength({ min: 1 })
     .withMessage("must have a title")
     .escape(),
-]
+];

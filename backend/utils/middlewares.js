@@ -33,9 +33,25 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     message: "Internal Server Error",
   });
 };
+
+// auth middleware
 const isAuthenticated = asyncHandler((req, res, next) => {
-  if (req.isAuthenticated() && String(req.user.id) === req.params.id) {
-    next();
+  console.log(req.isUnauthenticated());
+  if (req.isAuthenticated()) {
+    return next();
+  } else {
+    throw new CustomError(
+      401,
+      "you don't have permission to access the resource",
+      "middleware auth",
+    );
+  }
+});
+const clubIdParams = asyncHandler((req, res, next) => {
+  const isMatch = req.user.clubs.includes(req.params.clubId);
+
+  if (isMatch) {
+    return next();
   } else {
     throw new CustomError(
       401,
@@ -55,4 +71,5 @@ module.exports = {
   errorHandlerMiddleware,
   isAuthenticated,
   unknownEndpoint,
+  clubIdParams,
 };

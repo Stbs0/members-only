@@ -62,3 +62,5 @@ exports.deleteUserDB = async (id) => {
   const values = [id];
   await pool.query(query, values);
 };
+
+

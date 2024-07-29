@@ -6,9 +6,9 @@ const middleware = require('../utils/middlewares')
 router.get('/',(req,res)=>{
     res.render('update-user')
 })
-router.get('/:id',middleware.isAuthenticated ,usersController.getUserInfo)
-router.put('/:id',middleware.isAuthenticated ,usersController.updateUserInfo)
-router.delete('/:id',middleware.isAuthenticated,usersController.deleteUser)
+router.get('/:id' ,usersController.getUserInfo)
+router.put('/:id' ,usersController.updateUserInfo)
+router.delete('/:id',usersController.deleteUser)
 
 
 module.exports = router

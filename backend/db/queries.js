@@ -57,16 +57,7 @@ exports.saveUserInClub = async (username, clubName) => {
 
   await pool.query(query, values);
 };
-exports.getClubPasscode = async (name) => {
-  const query = `
-    SELECT passcode FROM clubs WHERE name like $1;
-    `;
-  const values = [name];
 
-  const result = await pool.query(query, values);
-  const rows = result.rows;
-  return rows[0];
-};
 exports.getUserClubs = async (userId) => {
   const query = `
     SELECT DISTINCT club_id FROM user_clubs WHERE user_id = $1;

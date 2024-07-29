@@ -35,7 +35,7 @@ app.use(
     },
   }),
 );
-require("./utils/passport/passport");
+require("./utils/passport");
 
 app.use(passport.session());
 
@@ -46,13 +46,12 @@ app.use((req, res, next) => {
 });
 //routers
 // app.use("/", routers.homeRouter);
-app.use("/api/users", routers.usersRouter);
+app.use("/api/users", middlewares.isAuthenticated, routers.usersRouter);
 app.use("/api/auth", routers.authRouter);
 app.use("/api/messages", routers.messagesRouter);
-// app.use("/api/clubs", routers.joinClubRouter);
+app.use("/api/clubs", routers.clubsRouter);
 
 // app.use("/create-message", routers.createMessageRouter);
 app.use(middlewares.unknownEndpoint);
 app.use(middlewares.errorHandlerMiddleware);
 app.listen(3000, () => console.log("Server started on port 3000"));
-
