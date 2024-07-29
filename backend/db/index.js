@@ -1,6 +1,8 @@
-const userQueries = require("./usersQueires");
+const userQueries = require("./usersQueries");
+const messagesQueries = require("./messagesQueries");
 
 
 module.exports = {
-    ...userQueries,
+  ...userQueries,
+  ...messagesQueries,
 };

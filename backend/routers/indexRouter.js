@@ -6,6 +6,7 @@
 // const homeRouter = require("./homeRouter");
 const usersRouter = require("./usersRouter");
 const authRouter = require("./authRouter");
+const messagesRouter = require("./messagesRouter");
 module.exports = {
   //   signUpRouter,
   //   joinClubRouter,
@@ -13,6 +14,7 @@ module.exports = {
   //   logoutRouter,
   usersRouter,
   authRouter,
+  messagesRouter,
   //   createMessageRouter,
   //   homeRouter,
 };
