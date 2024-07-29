@@ -1,6 +1,6 @@
 const { body } = require("express-validator");
 const db = require("../db/queries");
-exports.signUpValidationRules = () => [
+exports.signUp = () => [
   body("firstName")
     .trim()
     .isLength({ min: 1 })
@@ -21,6 +21,15 @@ exports.signUpValidationRules = () => [
     .custom((value, { req }) => (value === req.body.password ? true : false))
     .withMessage("Passwords do not match"),
 ];
+
+exports.logIn = () => [
+  body("username")
+    .trim()
+    .isLength({ min: 5 })
+    .withMessage("must have username and at least 5 characters")
+    .escape(),
+  body("password").isLength({ min: 5 }),
+]
 
 exports.joinClubRules = () => [
   body("club")

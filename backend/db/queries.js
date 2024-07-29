@@ -32,6 +32,17 @@ WHERE
   const { rows } = await pool.query(query, values);
   return rows[0];
 };
+exports.getUserInfo = async (id) => {
+  const query = `
+   SELECT first_name, last_name, username, id FROM 
+    users
+WHERE 
+    users.id = $1;
+    `;
+  const values = [id];
+  const { rows } = await pool.query(query, values);
+  return rows[0];
+};
 
 // clubs
 exports.saveUserInClub = async (username, clubName) => {

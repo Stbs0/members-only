@@ -1,0 +1,13 @@
+PUT http://localhost:3000/api/users/12
+Content-Type: application/json
+Cookie: connect.sid=s%3A7kyKrpzo8uMlShD_eB8NGFGCBNraxUhH.S%2FnxM9JSt%2BnpPBvKqsph6tIHKffMHIbJdDJn73mpDjk
+
+{
+  "firstName": "22222",
+  "lastName": "22222",
+  "username": "22222"
+}
+###
+GET http://localhost:3000/api/users/12
+Content-Type: application/json
+Cookie: connect.sid=s%3A7kyKrpzo8uMlShD_eB8NGFGCBNraxUhH.S%2FnxM9JSt%2BnpPBvKqsph6tIHKffMHIbJdDJn73mpDjk

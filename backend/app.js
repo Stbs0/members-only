@@ -45,12 +45,13 @@ app.use((req, res, next) => {
   next();
 });
 //routers
-app.use("/", routers.homeRouter);
-app.use("/sign-up", routers.signUpRouter);
-app.use("/join-club", routers.joinClubRouter);
-app.use("/log-in", routers.logInRouter);
-app.use("/log-out", routers.logoutRouter);
-app.use("/create-message", routers.createMessageRouter);
+// app.use("/", routers.homeRouter);
+app.use("/api/users", routers.usersRouter);
+app.use("/api/auth", routers.authRouter);
+// app.use("/api/clubs", routers.joinClubRouter);
+// app.use("/api/messages", routers.joinClubRouter);
+
+// app.use("/create-message", routers.createMessageRouter);
 
 app.use(middlewares.errorHandlerMiddleware);
 app.listen(3000, () => console.log("Server started on port 3000"));

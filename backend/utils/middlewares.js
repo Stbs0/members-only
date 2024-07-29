@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
+const CustomError = require("../utils/ErrorClass");
 // validation middlewares
 
 const validate = (req, res, next) => {
@@ -25,39 +26,27 @@ const requestLogger = (request, response, next) => {
 
 const errorHandlerMiddleware = (err, req, res, next) => {
   console.log("error", err);
-  if (typeof err === "array") {
-    console.log(
-      "erro medil",
-      err.map((e) => {
-        return { message: e.msg, field: e.path };
-      }),
-    );
-    res.status(400).send({
-      errors: err.map((e) => {
-        return { field: e.path, message: e.msg };
-      }),
-    });
+  if (err?.isCustomError) {
+    return res.status(err.statusCode).json({ ...err, message: err.message });
   }
-  if (err.name === "unAuthenticated") {
-    res.send(err.message);
-  }
-
-  next(err);
+  res.status(500).json({
+    message: "Internal Server Error",
+  });
 };
-const isAutherized = (req, res, next) => {
+const isAuthenticated = asyncHandler((req, res, next) => {
   if (req.isAuthenticated()) {
     next();
   } else {
-    next({
-      message: "you dont have access to the resource",
-      name: "unAuthenticated",
-    });
+    throw new CustomError(
+      401,
+      "you dont have permission to access the resource","middleware auth"
+    );
   }
-};
+});
 
 module.exports = {
   validate,
   requestLogger,
   errorHandlerMiddleware,
-  isAutherized,
+  isAuthenticated,
 };
