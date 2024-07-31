@@ -1,44 +1,33 @@
 const CustomError = require("../utils/ErrorClass");
 const pool = require("./pool");
-exports.getAllMessages = async () => {
-  try {
-    const query = `
-        SELECT messages.id, title, text, timestamp, clubs.name AS club_name,club_id FROM messages JOIN clubs ON messages.club_id = clubs.id;
-        `;
 
+exports.getMessages = async (userClubs = []) => {
+  let query;
+
+  if (userClubs.length > 0) {
+    query = `
+        SELECT messages.id, title, text, timestamp, users.username, clubs.name AS club_name, messages.club_id
+        FROM messages
+        JOIN users ON messages.user_id = users.id
+        JOIN clubs ON messages.club_id = clubs.id;
+      `;
+  } else {
+    query = `
+        SELECT messages.id, title, text, timestamp, clubs.name AS club_name, messages.club_id
+        FROM messages
+        JOIN clubs ON messages.club_id = clubs.id;
+        `;
+  }
+
+  try {
     const { rows } = await pool.query(query);
-    console.log("db messgaes", rows);
+
     return rows;
   } catch (error) {
-    return error;
+    throw CustomError(error);
   }
 };
-exports.getMembersMessages = async (clubs) => {
- 
-  try {
-    const query = `
-        SELECT messages.id, title, messages.text, messages.timestamp, users.username, messages.club_id FROM messages JOIN users ON messages.user_id = users.id ;
-        `;
 
-    const { rows } = await pool.query(query);
-    console.log("db messgaes", rows);
-    
-    const filteredMessages = rows.map((message) => {
-      if (clubs.includes(message.club_id)) {
-        return message;
-      }else{
-        delete message.username
-        return message;
-      }
-      
-    });
-      console.log("filteredMessages ", rows);
-
-    return filteredMessages;
-  } catch (error) {
-    return error;
-  }
-};
 exports.saveMessage = async (title, message, userId, clubId) => {
   try {
     const query = `
@@ -50,6 +39,23 @@ exports.saveMessage = async (title, message, userId, clubId) => {
     const { rows } = await pool.query(query, values);
     return rows[0];
   } catch (error) {
-    return error;
+    throw CustomError(error);
+  }
+};
+exports.getMessageById = async (messageId) => {
+  try {
+    const query = `
+          SELECT messages.id, title, text, timestamp, users.username, clubs.name AS club_name, messages.club_id
+          FROM messages
+          JOIN users ON messages.user_id = users.id
+          JOIN clubs ON messages.club_id = clubs.id
+          WHERE messages.id = $1
+        `;
+    const values = [messageId];
+    const { rows } = await pool.query(query, values);
+    return rows[0];
+    
+  } catch (error) {
+    throw new CustomError(error);
   }
 };

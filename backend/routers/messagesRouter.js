@@ -14,5 +14,6 @@ router.post(
   messagesController.createMessage,
 );
 
+router.get("/:id", rules.getMessage(),validate, messagesController.getSingleMessage);
 
 module.exports = router;

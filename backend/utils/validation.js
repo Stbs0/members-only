@@ -100,14 +100,15 @@ const createMessage = () => [
     .isLength({ min: 1 })
     .withMessage("must have a title")
     .escape(),
-    body('clubId').isNumeric().withMessage('must be number').custom((value,{req})=>{
+  body("clubId")
+    .isNumeric()
+    .withMessage("must be number")
+    .custom((value, { req }) => {
       if (!req.user.clubs.includes(value)) {
         throw new CustomError(400, "you are not in this club");
       }
-      return true
-    })
-
- 
+      return true;
+    }),
 ];
 
 const updateUser = () => [
@@ -159,6 +160,7 @@ const checkPassword = () => [
     .withMessage("Passwords do not match"),
 ];
 
+const getMessage = () => [param("id").toInt()];
 module.exports = {
   validate,
   signUp,
@@ -167,4 +169,5 @@ module.exports = {
   createMessage,
   updateUser,
   checkPassword,
+  getMessage,
 };

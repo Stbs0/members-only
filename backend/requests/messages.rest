@@ -11,3 +11,7 @@ Content-Type: application/json
 GET http://localhost:3000/api/messages
 Content-Type: application/json
 
+###
+
+GET http://localhost:3000/api/messages/8
+Content-Type: application/json
