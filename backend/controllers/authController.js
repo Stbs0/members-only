@@ -13,9 +13,17 @@ const signUp = asyncHandler(async (req, res, next) => {
   res.redirect("/auth/login");
 });
 
-
+const resetPassword = asyncHandler(async (req, res, next) => {
+  const { password } = req.body;
+  const userId = req.user.id;
+  const hash = await encryption.encryptPassword(password);
+  await db.changePassword(userId, hash);
+ 
+  res.redirect("/");
+});
 
 
 module.exports = {
   signUp,
+  resetPassword,
 };

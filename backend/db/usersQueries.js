@@ -93,4 +93,13 @@ exports.deleteUserDB = async (id) => {
   }
 };
 
+exports.changePassword = async (id, password) => {
+  try {
+    const query = `UPDATE users SET hash = $2 WHERE id = $1`;
+    const values = [id, password];
+    await pool.query(query, values);
+  } catch (error) {
+    return error
+  }
+};
 

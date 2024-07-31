@@ -1,25 +1,24 @@
 const router = require("express").Router();
 const passport = require("passport");
 const authController = require("../controllers/authController");
-const validation = require("../utils/validation");
+const {validate,...rules} = require("../utils/validation");
+const { isAuthenticated } = require("../utils/middlewares");
 
 router.get("/register", (req, res) => {
   res.render("sign-up-form");
 });
 router.post(
   "/register",
-  validation.signUp(),
-  validation.validate,
+  rules.signUp(),
+  validate,
   authController.signUp,
 );
-router.get("/login", (req, res) => {
-  res.render("log-in-form");
-});
+
 
 router.post(
   "/login",
-  validation.logIn(),
-  validation.validate,
+  rules.logIn(),
+  validate,
   passport.authenticate("local", {
     failureRedirect: "/api/auth/login",
     successRedirect: "/",
@@ -34,5 +33,12 @@ router.post("/logout", (req, res) => {
     res.redirect("/login");
   });
 });
+
+// router.post(
+//   "/forgot-password",
+//   rules.checkPassword(),
+//   validate,
+//   authController.resetPassword,
+// );
 
 module.exports = router;

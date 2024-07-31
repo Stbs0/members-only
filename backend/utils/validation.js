@@ -63,6 +63,14 @@ const logIn = () => [
 ];
 
 const joinClub = () => [
+  param("clubId")
+    .toInt()
+    .custom((value, { req }) => {
+      if (req.user.clubs.includes(value)) {
+        throw new CustomError(400, "you are already joined");
+      }
+      return true;
+    }),
   body("passcode")
     .isLength({ min: 1 })
     .withMessage("must have a passcode")
@@ -80,14 +88,6 @@ const joinClub = () => [
       }
       return true;
     }),
-  param("clubId")
-    .isNumeric()
-    .custom((value, { req }) => {
-      if (!req.user.clubs.includes(value)) {
-        throw new CustomError(400, "you are already joined");
-      }
-      return true;
-    }),
 ];
 const createMessage = () => [
   body("message")
@@ -100,40 +100,35 @@ const createMessage = () => [
     .isLength({ min: 1 })
     .withMessage("must have a title")
     .escape(),
+    body('clubId').isNumeric().withMessage('must be number').custom((value,{req})=>{
+      if (!req.user.clubs.includes(value)) {
+        throw new CustomError(400, "you are not in this club");
+      }
+      return true
+    })
 
-  body("clubId")
-    .isNumeric()
-    .custom((value, { req }) => {
-      if (!req.user.clubs.includes(value) || req.user.clubs.length === 0) {
-        throw new CustomError(
-          400,
-          "you dont have permission to access this club",
-        );
-      }
-      const clubExists = db.getClubById(value);
-      if (!clubExists) {
-        throw new CustomError(500, "club not found");
-      }
-      return true;
-    }),
+ 
 ];
 
 const updateUser = () => [
   body("firstName")
     .trim()
-    .optional().notEmpty()
+    .optional()
+    .notEmpty()
     .isString()
     .withMessage("must be a text")
     .escape(),
   body("lastName")
     .trim()
-    .optional().notEmpty()
+    .optional()
+    .notEmpty()
     .isString()
     .withMessage("must be a text")
     .escape(),
   body("username")
     .trim()
-    .optional().notEmpty()
+    .optional()
+    .notEmpty()
     .isLength({ min: 5 })
     .withMessage("must have username and at least 5 characters")
     .custom(async (value) => {
@@ -144,7 +139,7 @@ const updateUser = () => [
       return true;
     }),
   param("id")
-    .isNumeric()
+    .toInt()
     .custom(async (value, { req }) => {
       if (value !== req.user.id) {
         throw new CustomError(400, "cannot update others profile");
@@ -157,6 +152,13 @@ const updateUser = () => [
     }),
 ];
 
+const checkPassword = () => [
+  body("password").isLength({ min: 5 }),
+  body("confirmPassword")
+    .custom((value, { req }) => (value === req.body.password ? true : false))
+    .withMessage("Passwords do not match"),
+];
+
 module.exports = {
   validate,
   signUp,
@@ -164,4 +166,5 @@ module.exports = {
   joinClub,
   createMessage,
   updateUser,
+  checkPassword,
 };

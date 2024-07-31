@@ -1,14 +1,16 @@
 const db = require("../db/index");
 const asyncHandler = require("express-async-handler");
 const CostumeError = require("../utils/ErrorClass");
+
 const getMessages = asyncHandler(async (req, res, next) => {
   let messages;
-  if (req.user?.clubs.length > 0) {
-    messages = await db.getMembersMessages(req.user.clubs);
+  console.log('user',req?.user)
+  if (!req?.user) {
+    messages = await db.getAllMessages();
     return res.json(messages);
   }
-  messages = await db.getAllMessages();
-  res.json(messages);
+  messages = await db.getMembersMessages(req.user.clubs);
+  return res.json(messages);
 });
 
 const createMessage = asyncHandler(async (req, res, next) => {

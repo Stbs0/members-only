@@ -3,7 +3,7 @@ const pool = require("./pool");
 exports.getAllMessages = async () => {
   try {
     const query = `
-        SELECT messages.id, title, text, timestamp, clubs.name FROM messages JOIN clubs ON messages.club_id = clubs.id;
+        SELECT messages.id, title, text, timestamp, clubs.name AS club_name,club_id FROM messages JOIN clubs ON messages.club_id = clubs.id;
         `;
 
     const { rows } = await pool.query(query);
@@ -14,28 +14,29 @@ exports.getAllMessages = async () => {
   }
 };
 exports.getMembersMessages = async (clubs) => {
-  const club_id = clubs.map((club) => `'${club}'`).join(",");
-  console.log("club id", club_id);
+ 
   try {
     const query = `
-        SELECT messages.id, title, text, timestamp, users.username, clubs_id FROM messages JOIN users ON messages.user_id = users.id ;
+        SELECT messages.id, title, messages.text, messages.timestamp, users.username, messages.club_id FROM messages JOIN users ON messages.user_id = users.id ;
         `;
 
     const { rows } = await pool.query(query);
     console.log("db messgaes", rows);
-
-    return rows.map((message) => {
-      clubs.forEach((club) => {
-        if (message.club_id === club) {
-          return message;
-        } else {
-          delete message.username;
-          return message;
-        }
-      });
+    
+    const filteredMessages = rows.map((message) => {
+      if (clubs.includes(message.club_id)) {
+        return message;
+      }else{
+        delete message.username
+        return message;
+      }
+      
     });
+      console.log("filteredMessages ", rows);
+
+    return filteredMessages;
   } catch (error) {
-    return error
+    return error;
   }
 };
 exports.saveMessage = async (title, message, userId, clubId) => {
