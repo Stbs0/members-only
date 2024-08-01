@@ -1,6 +1,5 @@
 PUT http://localhost:3000/api/users/5
 Content-Type: application/json
-Cookie: connect.sid=s%3A7kyKrpzo8uMlShD_eB8NGFGCBNraxUhH.S%2FnxM9JSt%2BnpPBvKqsph6tIHKffMHIbJdDJn73mpDjk
 
 {
   "firstName": "aaaaaa",
@@ -14,4 +13,13 @@ Content-Type: application/json
 ###
 DELETE http://localhost:3000/api/users/12
 Content-Type: application/json
-Cookie: connect.sid=s%3A7kyKrpzo8uMlShD_eB8NGFGCBNraxUhH.S%2FnxM9JSt%2BnpPBvKqsph6tIHKffMHIbJdDJn73mpDjk
+
+###
+POST http://localhost:3000/api/users/
+Content-Type: application/json
+
+{
+  "firstName": "aaaaaa",
+  "lastName": "aaaaaa",
+  "username": "aaaaaa"
+}

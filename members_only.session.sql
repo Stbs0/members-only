@@ -18,7 +18,7 @@
     -- (SELECT id FROM users where username = $1 ),
     -- (SELECT id FROM clubs where name = $2 ),
     -- ); 
-   DELETE from messages;
+--    DELETE from messages;
 
 -- ALTER TABLE messages
 -- ADD CONSTRAINT club_id
@@ -26,4 +26,7 @@
 -- REFERENCES clubs(id)
 -- ON DELETE CASCADE;
 
-    
+-- ALTER TABLE users ADD COLUMN role VARCHAR(50) DEFAULT 'user';
+
+ALTER TABLE users
+DROP COLUMN membership_status;

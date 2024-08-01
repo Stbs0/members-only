@@ -18,11 +18,11 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-    "firstName":"noMessages",
-    "lastName":"noMessages",
-    "username":"noMessages",
-    "password":"noMessages",
-    "confirmPassword":"noMessages"
+    "firstName":"admin",
+    "lastName":"admin",
+    "username":"admin",
+    "password":"admin",
+    "confirmPassword":"admin"
 }
 ###
  POST http://localhost:3000/api/auth/forgot-password

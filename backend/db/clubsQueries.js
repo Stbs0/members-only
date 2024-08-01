@@ -39,9 +39,49 @@ const getClub = async (clubId) => {
     return error;
   }
 };
+const getAllClubs = async () => {
+  try {
+    const query = `
+          SELECT id,name,description FROM clubs ;
+          `;
+    const { rows } = await pool.query(query);
+    return rows;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getUserClubs = async (userId) => {
+  try {
+    const query = `
+          SELECT DISTINCT club_id FROM user_clubs WHERE user_id = $1;
+          `;
+    const values = [userId];
+    const { rows } = await pool.query(query, values);
+    return rows.map((row) => row.club_id);
+  } catch (error) {
+    return error;
+  }
+};
+const getClubById = async (clubId) => {
+  console.log(clubId)
+  try {
+    const query = `
+          SELECT id, name, description FROM clubs WHERE id = $1;
+          `;
+    const values = [clubId];
+    const { rows } = await pool.query(query, values);
+    return rows[0];
+  } catch (error) {
+    return error;
+  }
+};
 
 module.exports = {
   getClubPasscode,
   saveUserInClub,
   getClub,
+  getAllClubs,
+  getUserClubs,
+  getClubById,
 };

@@ -65,9 +65,12 @@ File Uploads
 Upload Message Image:
 POST /api/messages/:id/upload
 Relationships and Memberships
+
 Add User to Club:
 POST /api/clubs/:clubId/join
+
 Get Users in a Club:
 GET /api/clubs/:clubId/users
+
 Get Clubs of a User:
 GET /api/users/:userId/clubs

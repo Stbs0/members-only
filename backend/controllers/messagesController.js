@@ -1,6 +1,5 @@
 const db = require("../db/index");
 const asyncHandler = require("express-async-handler");
-const CostumeError = require("../utils/ErrorClass");
 const CustomError = require("../utils/ErrorClass");
 
 const getMessages = asyncHandler(async (req, res, next) => {
@@ -32,7 +31,6 @@ const getSingleMessage = asyncHandler(async (req, res, next) => {
   if (!message) {
     throw new CustomError(null, "message not found", 404);
   }
-  console.log(req.user)
   if (!req.user || !req.user.clubs.includes(message.club_id)) {
      delete message.username;
      return res.json(message);
@@ -42,9 +40,40 @@ const getSingleMessage = asyncHandler(async (req, res, next) => {
   }
 });
 
-// const getClubsMessages = asyncHandler(async (req, res, next) => {
-//   const messages = await db.getMembersMessages(req.user.clubs);
-//   res.json(messages);
-// });
+const updateMessage = asyncHandler(async(req,res,next)=>{
 
-module.exports = { getMessages, createMessage, getSingleMessage };
+  const {title,text} = req.body;
+  const messageId = req.params.id;
+  const newMessage = await db.updateMessage(messageId,title,text);
+  if (!newMessage) {
+    throw new CustomError(null, "message not found", 404);
+  }
+  if (req.user.id !== newMessage.user_id) {
+    throw new CustomError(null,401, "unauthorized");
+  }
+  res.status(201).json(newMessage);
+})
+
+const deleteMessage = asyncHandler(async(req,res,next)=>{
+
+  const messageId = req.params.id;
+  const message = await db.getMessageById(messageId);
+  if (!message) {
+    throw new CustomError(null, "message not found", 404);
+  }
+  if (req.user.username !== message.username) {
+    throw new CustomError(null, 401, "unauthorized");
+  }
+  await db.deleteMessage(messageId);
+  res.status(204)
+})
+
+
+
+module.exports = {
+  getMessages,
+  createMessage,
+  getSingleMessage,
+  updateMessage,
+  deleteMessage,
+};

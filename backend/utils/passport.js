@@ -1,6 +1,6 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const db = require("../db/queries");
+const db = require("../db/index");
 const encryption = require("./encryption");
 const CostumeError = require("./ErrorClass");
 passport.use(
@@ -36,7 +36,7 @@ passport.deserializeUser(async (id, done) => {
 
     const userClubs = await db.getUserClubs(id);
     user.clubs = userClubs;
-console.log("Successfully deserialized user");
+    console.log("Successfully deserialized user");
     done(null, user); // Successfully deserialized user
   } catch (error) {
     // Handle any errors that occur during the asynchronous operations

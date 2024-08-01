@@ -4,3 +4,8 @@ Content-Type: application/json
 {
     "passcode":"I love books"
 }
+###
+GET http://localhost:3000/api/clubs/
+###
+
+GET http://localhost:3000/api/clubs/2

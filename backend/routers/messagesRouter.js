@@ -14,6 +14,22 @@ router.post(
   messagesController.createMessage,
 );
 
-router.get("/:id", rules.getMessage(),validate, messagesController.getSingleMessage);
+router.get(
+  "/:id",
+  rules.paramsToInt(),
+  validate,
+  messagesController.getSingleMessage,
+);
+
+
+router.put(
+  "/:id",middleware.isAuthenticated,
+  rules.checkUpdateMessage(),
+  validate,
+  messagesController.updateMessage,
+);
+
+router.delete("/:id",middleware.isAuthenticated,rules.deleteMessage(),validate, messagesController.deleteMessage);
+
 
 module.exports = router;

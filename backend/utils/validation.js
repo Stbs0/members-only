@@ -5,7 +5,7 @@ const CustomError = require("./ErrorClass");
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    throw new CustomError(400, "invalid input", errors.array());
+    throw new CustomError(errors.array(), 400, "invalid input");
   }
   next();
 };
@@ -27,7 +27,7 @@ const signUp = () => [
     .withMessage("must have username and at least 5 characters")
     .custom(async (value, { req }) => {
       if (req?.user) {
-        throw new CustomError(400, "already logged in");
+        throw new CustomError(400, "already logged in. please logout first.");
       }
       const user = await db.getUserByUsername(value);
       if (user) {
@@ -160,7 +160,38 @@ const checkPassword = () => [
     .withMessage("Passwords do not match"),
 ];
 
-const getMessage = () => [param("id").toInt()];
+const checkUpdateMessage = () => [
+  param("id").toInt(),
+  body("title")
+    .optional({ checkFalsy: true })
+    .isString()
+    .trim()
+    .withMessage("must be a string")
+    .escape(),
+  body("text")
+    .optional({ checkFalsy: true })
+    .trim()
+    .isString()
+    .withMessage("must have a string")
+    .escape(),
+];
+
+const deleteMessage = () => [
+  param("id")
+    .toInt()
+    .custom(async (value, { req }) => {
+      const message = await db.getMessageById(value);
+      if (!message) {
+        throw new CustomError(null, "message not found", 404);
+      }
+      if (req.user.username !== message.username) {
+        throw new CustomError(null, 401, "unauthorized");
+      }
+      return true;
+    }),
+];
+
+const paramsToInt = () => [param("id").toInt()];
 module.exports = {
   validate,
   signUp,
@@ -169,5 +200,7 @@ module.exports = {
   createMessage,
   updateUser,
   checkPassword,
-  getMessage,
+  paramsToInt,
+  checkUpdateMessage,
+  deleteMessage,
 };

@@ -26,6 +26,7 @@ exports.getUserByUsername = async (username) => {
     return rows[0];
     
   } catch (error) {
+    console.log(error)
     return error
   }
 };
@@ -97,6 +98,15 @@ exports.changePassword = async (id, password) => {
   try {
     const query = `UPDATE users SET hash = $2 WHERE id = $1`;
     const values = [id, password];
+    await pool.query(query, values);
+  } catch (error) {
+    return error
+  }
+};
+exports.makeAdmin = async (id) => {
+  try {
+    const query = `UPDATE users SET admin = admin WHERE id = $1`;
+    const values = [id];
     await pool.query(query, values);
   } catch (error) {
     return error
