@@ -46,7 +46,7 @@ app.use((req, res, next) => {
 });
 //routers
 // app.use("/", routers.homeRouter);
-app.use("/api/users", middlewares.isAuthenticated, routers.usersRouter);
+app.use("/api/users",  routers.usersRouter);
 app.use("/api/auth", routers.authRouter);
 app.use("/api/messages", routers.messagesRouter);
 app.use("/api/clubs", routers.clubsRouter);

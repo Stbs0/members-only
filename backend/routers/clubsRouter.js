@@ -6,7 +6,7 @@ const { isAuthenticated } = require("../utils/middlewares");
 
 router.post(
   "/:clubId/join",
-  isAuthenticated(["site_admin", "club-admin"]),
+  isAuthenticated,
   rules.joinClub(),
   validate,
   clubsController.joinClub,
@@ -17,14 +17,14 @@ router.get("/:clubId", rules.paramsToInt(), clubsController.getClub);
 
 router.post(
   "/",
-  isAuthenticated(["site_admin", "user", "club-admin"]),
+  isAuthenticated,
   rules.createClub(),
   validate,
   clubsController.createClub,
 );
 router.delete(
   "/:clubId",
-  isAuthenticated(["site_admin", "club-admin"]),
+  isAuthenticated,
   rules.deleteClub(),
   validate,
   clubsController.deleteClub,
@@ -32,7 +32,7 @@ router.delete(
 
 router.get(
   "/:clubId/users",
-  isAuthenticated(["site_admin", "club-admin"]),
+  isAuthenticated,
   rules.isClubMember(),
   validate,
   clubsController.getClubMembers,

@@ -2,10 +2,11 @@ const router = require("express").Router();
 const usersController = require("../controllers/usersController");
 const validation = require("../utils/validation");
 
-// router.get("/", (req, res) => {
-//   res.render("update-user");
-// });
-router.get("/:id", usersController.getUserInfo);
+const { isAuthenticated } = require("../utils/middlewares");
+
+  router.get("/:userId/clubs",isAuthenticated, usersController.getUserClubs);
+
+router.get("/:id",isAuthenticated, usersController.getUserInfo);
 
 router.put(
   "/:id",
@@ -14,5 +15,6 @@ router.put(
   usersController.updateUserInfo,
 );
 router.delete("/:id", usersController.deleteUser);
+
 
 module.exports = router;

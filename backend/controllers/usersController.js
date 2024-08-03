@@ -32,11 +32,12 @@ const deleteUser = asyncHandler(async (req, res, next) => {
     res.status(204).end();
   }
 });
-const makeAdmin = asyncHandler(async (req, res, next) => {
-  const clubId = req.params.clubId;
-  const userId = req.user.id;
-  await db.makeAdmin(clubId, userId);
-  res.status(200);
-});
 
-module.exports = { getUserInfo, updateUserInfo, deleteUser };
+const getUserClubs = async (req, res, next) => {
+  const userId = req.params.userId;
+  console.log(userId)
+  const clubs = await db.getUserClubsDB(userId);
+  res.json(clubs);
+};
+
+module.exports = { getUserInfo, updateUserInfo, deleteUser, getUserClubs };

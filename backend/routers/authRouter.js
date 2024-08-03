@@ -34,11 +34,6 @@ router.post("/logout", (req, res) => {
   });
 });
 
-// router.post(
-//   "/forgot-password",
-//   rules.checkPassword(),
-//   validate,
-//   authController.resetPassword,
-// );
+
 
 module.exports = router;

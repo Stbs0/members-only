@@ -23,3 +23,5 @@ Content-Type: application/json
   "lastName": "aaaaaa",
   "username": "aaaaaa"
 }
+###
+GET http://localhost:3000/api/users/5/clubs
