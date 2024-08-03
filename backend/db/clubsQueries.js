@@ -11,7 +11,7 @@ const getClubPasscode = async (clubId) => {
     const { rows } = await pool.query(query, values);
     return rows[0].passcode;
   } catch (error) {
-    return error;
+   throw new CustomError(error);
   }
 };
 
@@ -25,7 +25,7 @@ const saveUserInClub = async (userId, ClubId, isAdmin=false) => {
 
     await pool.query(query, values);
   } catch (error) {
-    return error;
+   throw new CustomError(error);
   }
 };
 const getClub = async (clubId) => {
@@ -37,7 +37,7 @@ const getClub = async (clubId) => {
     const { rows } = await pool.query(query, values);
     return rows;
   } catch (error) {
-    return error;
+   throw new CustomError(error);
   }
 };
 const getAllClubs = async () => {
@@ -48,7 +48,7 @@ const getAllClubs = async () => {
     const { rows } = await pool.query(query);
     return rows;
   } catch (error) {
-    return error;
+   throw new CustomError(error);
   }
 };
 
@@ -61,7 +61,7 @@ const getUserClubs = async (userId) => {
     const { rows } = await pool.query(query, values);
     return rows.map((row) => row.club_id);
   } catch (error) {
-    return error;
+   throw new CustomError(error);
   }
 };
 const getClubById = async (clubId) => {
@@ -74,7 +74,7 @@ const getClubById = async (clubId) => {
     const { rows } = await pool.query(query, values);
     return rows[0];
   } catch (error) {
-    return error;
+   throw new CustomError(error);
   }
 };
 const createClub = async (name, description, passcode, userId) => {
@@ -102,7 +102,7 @@ const deleteClub = async (clubId) => {
     const values = [clubId];
     await pool.query(query, values);
   } catch (error) {
-    return error;
+   throw new CustomError(error);
   }
 };
 

@@ -27,10 +27,7 @@ const errorHandlerMiddleware = (err, req, res,next) => {
 };
 
 // auth middleware
-/* 
-@param {array} - value of the user
 
-*/
 const isAuthenticated = asyncHandler((req, res, next) => {
   if (req.isAuthenticated() || req?.user?.role === "site_admin") {
     return next();
@@ -45,7 +42,7 @@ const isAuthenticated = asyncHandler((req, res, next) => {
 });
 
 const unknownEndpoint = asyncHandler((req, res, next) => {
-  throw new CustomError(null, 404, "endpoint not found", "unknown endpoint");
+  throw new CustomError(null, 404, "endpoint not found");
 });
 
 module.exports = {

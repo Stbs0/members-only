@@ -2,7 +2,6 @@ const router = require("express").Router();
 const passport = require("passport");
 const authController = require("../controllers/authController");
 const {validate,...rules} = require("../utils/validation");
-const { isAuthenticated } = require("../utils/middlewares");
 
 router.get("/register", (req, res) => {
   res.render("sign-up-form");

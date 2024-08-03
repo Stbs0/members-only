@@ -54,33 +54,38 @@ exports.getMessageById = async (messageId) => {
     const values = [messageId];
     const { rows } = await pool.query(query, values);
     return rows[0];
-    
   } catch (error) {
     throw new CustomError(error);
   }
 };
 
-exports.updateMessage=async (id, title, text)=>{
-
-  const query = `
+exports.updateMessage = async (id, title, text) => {
+  try {
+    const query = `
   UPDATE messages SET title = COALESCE($2, title), text = COALESCE($3, text) WHERE id = $1 RETURNING *
-  `
+  `;
 
-  const values = [id, title, text];
+    const values = [id, title, text];
 
-  const { rows } = await pool.query(query, values);
+    const { rows } = await pool.query(query, values);
 
-  return rows[0];
-}
+    return rows[0];
+  } catch (error) {
+    throw new CustomError(error);
+  }
+};
 
-exports.deleteMessage = async(id)=>{
-
-  const query = `
+exports.deleteMessage = async (id) => {
+  try {
+    const query = `
   DELETE FROM messages WHERE id = $1
-  `
+  `;
 
-  const values = [id];
+    const values = [id];
 
-  await pool.query(query, values);
-  
-}
+    await pool.query(query, values);
+    
+  } catch (error) {
+    throw new CustomError(error);
+  }
+};

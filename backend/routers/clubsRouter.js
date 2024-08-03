@@ -4,16 +4,18 @@ const clubsController = require("../controllers/clubsController");
 const { validate, ...rules } = require("../utils/validation");
 const { isAuthenticated } = require("../utils/middlewares");
 
-router.post(
-  "/:clubId/join",
-  isAuthenticated,
-  rules.joinClub(),
-  validate,
-  clubsController.joinClub,
-);
+
 router.get("/", clubsController.getClubs);
 
 router.get("/:clubId", rules.paramsToInt(), clubsController.getClub);
+
+router.get(
+  "/:clubId/users",
+  isAuthenticated,
+  rules.isClubMember(),
+  validate,
+  clubsController.getClubMembers,
+);
 
 router.post(
   "/",
@@ -21,6 +23,14 @@ router.post(
   rules.createClub(),
   validate,
   clubsController.createClub,
+);
+
+router.post(
+  "/:clubId/join",
+  isAuthenticated,
+  rules.joinClub(),
+  validate,
+  clubsController.joinClub,
 );
 router.delete(
   "/:clubId",
@@ -30,12 +40,6 @@ router.delete(
   clubsController.deleteClub,
 );
 
-router.get(
-  "/:clubId/users",
-  isAuthenticated,
-  rules.isClubMember(),
-  validate,
-  clubsController.getClubMembers,
-);
+
 
 module.exports = router;
