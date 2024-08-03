@@ -1,20 +1,19 @@
 const router = require("express").Router();
 const usersController = require("../controllers/usersController");
-const validation = require("../utils/validation");
+const { validate, ...rules } = require("../utils/validation");
 
 const { isAuthenticated } = require("../utils/middlewares");
 
-  router.get("/:userId/clubs",isAuthenticated, usersController.getUserClubs);
+router.get("/:userId/clubs", isAuthenticated, usersController.getUserClubs);
 
-router.get("/:id",isAuthenticated, usersController.getUserInfo);
+router.get("/:id", isAuthenticated, usersController.getUserInfo);
 
 router.put(
   "/:id",
-  validation.updateUser(),
-  validation.validate,
+  rules.updateUser(),
+  validate,
   usersController.updateUserInfo,
 );
-router.delete("/:id", usersController.deleteUser);
-
+router.delete("/:id",rules.deleteUser(), isAuthenticated, usersController.deleteUser);
 
 module.exports = router;

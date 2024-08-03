@@ -53,6 +53,15 @@ const updateUser = () => [
     }),
 ];
 
+const deleteUser = () => [
+  param("id").toInt().custom((value,{req}) => {
+    if (value !== req.user.id) {
+      throw new CustomError(400, "cannot delete others profile");
+    }
+    return true
+  })
+]
+
 // auth validation
 const signUp = () => [
   body("firstName")
@@ -259,7 +268,7 @@ module.exports = {
   logIn,
   joinClub,
   createMessage,
-  updateUser,
+  updateUser,deleteUser,
   checkPassword,
   paramsToInt,
   checkUpdateMessage,
