@@ -10,6 +10,50 @@ const validate = (req, res, next) => {
   next();
 };
 
+// user validation
+const updateUser = () => [
+  body("firstName")
+    .trim()
+    .optional()
+    .notEmpty()
+    .isString()
+    .withMessage("must be a text")
+    .escape(),
+  body("lastName")
+    .trim()
+    .optional()
+    .notEmpty()
+    .isString()
+    .withMessage("must be a text")
+    .escape(),
+  body("username")
+    .trim()
+    .optional()
+    .notEmpty()
+    .isLength({ min: 5 })
+    .withMessage("must have username and at least 5 characters")
+    .custom(async (value) => {
+      const user = await db.getUserByUsername(value);
+      if (user) {
+        throw new CustomError(400, "username already exists");
+      }
+      return true;
+    }),
+  param("id")
+    .toInt()
+    .custom(async (value, { req }) => {
+      if (value !== req.user.id) {
+        throw new CustomError(400, "cannot update others profile");
+      }
+      const user = await db.getUserById(value);
+      if (!user) {
+        throw new CustomError(400, "user not found");
+      }
+      return true;
+    }),
+];
+
+// auth validation
 const signUp = () => [
   body("firstName")
     .trim()
@@ -62,33 +106,14 @@ const logIn = () => [
   body("password").isLength({ min: 5 }),
 ];
 
-const joinClub = () => [
-  param("clubId")
-    .toInt()
-    .custom((value, { req }) => {
-      if (req.user.clubs.includes(value)) {
-        throw new CustomError(400, "you are already joined");
-      }
-      return true;
-    }),
-  body("passcode")
-    .isLength({ min: 1 })
-    .withMessage("must have a passcode")
-    .custom(async (value, { req }) => {
-      const isPresent = req.user.clubs.includes(Number(req.params.clubId));
-      if (isPresent) {
-        throw new CustomError(400, "already joined");
-      }
-      const passcode = await db.getClubPasscode(req.params.clubId);
-      if (!passcode) {
-        throw new CustomError(500, "club not found");
-      }
-      if (value !== passcode) {
-        throw new CustomError(400, "wrong passcode");
-      }
-      return true;
-    }),
+const checkPassword = () => [
+  body("password").isLength({ min: 5 }),
+  body("confirmPassword")
+    .custom((value, { req }) => (value === req.body.password ? true : false))
+    .withMessage("Passwords do not match"),
 ];
+
+// messages validation
 const createMessage = () => [
   body("message")
     .trim()
@@ -109,55 +134,6 @@ const createMessage = () => [
       }
       return true;
     }),
-];
-
-const updateUser = () => [
-  body("firstName")
-    .trim()
-    .optional()
-    .notEmpty()
-    .isString()
-    .withMessage("must be a text")
-    .escape(),
-  body("lastName")
-    .trim()
-    .optional()
-    .notEmpty()
-    .isString()
-    .withMessage("must be a text")
-    .escape(),
-  body("username")
-    .trim()
-    .optional()
-    .notEmpty()
-    .isLength({ min: 5 })
-    .withMessage("must have username and at least 5 characters")
-    .custom(async (value) => {
-      const user = await db.getUserByUsername(value);
-      if (user) {
-        throw new CustomError(400, "username already exists");
-      }
-      return true;
-    }),
-  param("id")
-    .toInt()
-    .custom(async (value, { req }) => {
-      if (value !== req.user.id) {
-        throw new CustomError(400, "cannot update others profile");
-      }
-      const user = await db.getUserById(value);
-      if (!user) {
-        throw new CustomError(400, "user not found");
-      }
-      return true;
-    }),
-];
-
-const checkPassword = () => [
-  body("password").isLength({ min: 5 }),
-  body("confirmPassword")
-    .custom((value, { req }) => (value === req.body.password ? true : false))
-    .withMessage("Passwords do not match"),
 ];
 
 const checkUpdateMessage = () => [
@@ -191,8 +167,37 @@ const deleteMessage = () => [
     }),
 ];
 
-const paramsToInt = () => [param("id").toInt()];
+// club validation
 
+const joinClub = () => [
+  param("clubId")
+    .toInt()
+    .custom((value, { req }) => {
+      if (req.user.clubs.includes(value)) {
+        throw new CustomError(400, "you are already joined");
+      }
+      return true;
+    }),
+  body("passcode")
+    .isLength({ min: 1 })
+    .withMessage("must have a passcode")
+    .custom(async (value, { req }) => {
+      const isPresent = req.user.clubs.includes(Number(req.params.clubId));
+      if (isPresent) {
+        throw new CustomError(400, "already joined");
+      }
+      const passcode = await db.getClubPasscode(req.params.clubId);
+      if (!passcode) {
+        throw new CustomError(500, "club not found");
+      }
+      if (value !== passcode) {
+        throw new CustomError(400, "wrong passcode");
+      }
+      return true;
+    }),
+
+  
+];
 
 const createClub = () => [
   body("name")
@@ -202,7 +207,7 @@ const createClub = () => [
     .escape(),
   body("passcode")
     .trim()
-    .isLength({ min: 1 })
+    .notEmpty()
     .withMessage("must have a passcode")
     .escape(),
   body("description")
@@ -210,7 +215,44 @@ const createClub = () => [
     .isLength({ min: 1 })
     .withMessage("must have a description")
     .escape(),
-]
+];
+
+const deleteClub = () => [
+  param("clubId")
+    .toInt()
+    .custom(async (value, { req }) => {
+      const club = await db.getClubById(value);
+      if (!club) {
+        throw new CustomError(null, 400, "club not found");
+      }
+
+    
+
+      if (!req.user.clubs.includes(value) && req.user.role !== "site_admin" ) {
+        throw new CustomError(null, 400, "you are not in this club");
+      }
+
+      if (club.admin_id !== req.user.id) {
+        throw new CustomError(null, 400, "unauthorized");
+      }
+
+      return true;
+    }),
+];
+
+const isClubMember = () => [
+  param("clubId")
+    .toInt()
+    .custom(async (value, { req }) => {
+      if (!req.user.clubs.includes(value) && req.user.role !== "site_admin") {
+        throw new CustomError(null, 400, "you are not in this club");
+      }
+      return true;
+    }),
+];
+
+const paramsToInt = () => [param("id").toInt()];
+
 module.exports = {
   validate,
   signUp,
@@ -223,4 +265,6 @@ module.exports = {
   checkUpdateMessage,
   deleteMessage,
   createClub,
+  deleteClub,
+  isClubMember,
 };

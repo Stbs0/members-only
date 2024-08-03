@@ -9,3 +9,21 @@ GET http://localhost:3000/api/clubs/
 ###
 
 GET http://localhost:3000/api/clubs/2
+
+###
+GET http://localhost:3000/api/clubs/12/users
+
+###
+
+POST http://localhost:3000/api/clubs/
+Content-Type: application/json
+
+{
+    "name":"test 9",
+    "description":"dddddddddd",
+    "passcode":"123456789"
+}
+
+###
+DELETE http://localhost:3000/api/clubs/13
+Content-Type: application/json

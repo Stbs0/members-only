@@ -35,7 +35,7 @@ exports.getUserById = async (id) => {
   try {
     
     const query = `
-     SELECT id, first_name, last_name, username FROM 
+     SELECT * FROM 
       users
   WHERE 
       users.id = $1;
@@ -82,7 +82,16 @@ exports.updateUser = async (id,  username, first_name, last_name ) => {
     return error
   }
 };
-
+exports.changeUserRole = async (id, role) => {
+  try {
+    const query = `UPDATE users SET role = $2 WHERE id = $1 RETURNING *`;
+    const values = [id, role];
+    const {rows} = await pool.query(query, values);
+    return rows[0]
+  } catch (error) {
+    return error
+  }
+}
 exports.deleteUserDB = async (id) => {
   try {
     

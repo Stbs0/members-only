@@ -25,19 +25,25 @@ const errorHandlerMiddleware = (err, req, res, next) => {
 };
 
 // auth middleware
-const isAuthenticated = asyncHandler((req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next();
-  } else {
-    throw new CustomError(
-      null,
-      401,
-      "you don't have permission to access the resource",
-      "middleware auth",
-    );
-  }
-});
+/* 
+@param {array} - value of the user
 
+*/
+const isAuthenticated = (value) =>
+  asyncHandler((req, res, next) => {
+    console.log('check',value.includes(req.user.role));
+    console.log('check',value,req.user.role);
+    if (req.isAuthenticated() && value.includes(req.user.role)) {
+      return next();
+    } else {
+      throw new CustomError(
+        null,
+        401,
+        "you don't have permission to access the resource",
+        "middleware auth",
+      );
+    }
+  });
 
 const unknownEndpoint = asyncHandler((req, res, next) => {
   throw new CustomError(null, 404, "endpoint not found", "unknown endpoint");
