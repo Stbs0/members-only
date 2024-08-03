@@ -7,8 +7,8 @@ class CustomError extends Error {
     super(message);
     this.statusCode = statusCode;
     this.message = message;
-    this.data = data;
     this.isCustomError = true;
+    this.data = data;
   }
 }
 

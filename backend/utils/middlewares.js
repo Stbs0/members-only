@@ -13,10 +13,12 @@ const requestLogger = (request, response, next) => {
 
 // error handling middleware
 
-const errorHandlerMiddleware = (err, req, res, next) => {
-  console.log("error", err);
+const errorHandlerMiddleware = (err, req, res,next) => {
+  console.error("error1:", err);
   if (err?.isCustomError) {
-    return res.status(err.statusCode).json({ ...err, message: err.message });
+    return res
+      .status(err.statusCode)
+      .json({ message: err.message, data: err.data });
   }
   res.status(500).json({
     message: "Internal Server Error",
@@ -30,7 +32,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
 
 */
 const isAuthenticated = asyncHandler((req, res, next) => {
-  if (req.isAuthenticated() || req.user.role === "site_admin") {
+  if (req.isAuthenticated() || req?.user?.role === "site_admin") {
     return next();
   } else {
     throw new CustomError(
