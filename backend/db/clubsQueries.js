@@ -76,6 +76,17 @@ const getClubById = async (clubId) => {
     return error;
   }
 };
+const createClub = async (name,description,passcode,userId)=>{
+  const query = `
+  INSERT INTO clubs (name,name,description,passcode,admin_id)
+  VALUES ($1,$2,$3,$4)
+  RETURNING name, description,admin_id;
+  `;
+
+  const values = [name, description, passcode,userId]
+  const {rows} = await pool.query(query,values)
+  return rows[0]
+}
 
 module.exports = {
   getClubPasscode,
@@ -84,4 +95,5 @@ module.exports = {
   getAllClubs,
   getUserClubs,
   getClubById,
+  createClub,
 };

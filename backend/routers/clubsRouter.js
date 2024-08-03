@@ -13,5 +13,14 @@ router.post(
 );
 router.get("/", clubsController.getClubs);
 
-router.get("/:clubId",rules.paramsToInt(),  clubsController.getClub);
+router.get("/:clubId", rules.paramsToInt(), clubsController.getClub);
+
+router.post(
+  "/",
+  middlewares.isAuthenticated,
+  rules.createClub(),
+  validate,
+  clubsController.createClub,
+);
+
 module.exports = router;

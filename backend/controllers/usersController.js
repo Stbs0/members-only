@@ -32,14 +32,11 @@ const deleteUser = asyncHandler(async (req, res, next) => {
     res.status(204).end();
   }
 });
-
 const makeAdmin = asyncHandler(async (req, res, next) => {
-  const userId = req.params.id;
-  const user = await db.makeAdmin(userId);
-  if (!user) {
-    throw new CostumeError(null, "user not found", 401);
-  } else {
-    res.json(user);
-  }
-})
+  const clubId = req.params.clubId;
+  const userId = req.user.id;
+  await db.makeAdmin(clubId, userId);
+  res.status(200);
+});
+
 module.exports = { getUserInfo, updateUserInfo, deleteUser };

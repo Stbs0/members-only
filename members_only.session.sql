@@ -26,7 +26,14 @@
 -- REFERENCES clubs(id)
 -- ON DELETE CASCADE;
 
--- ALTER TABLE users ADD COLUMN role VARCHAR(50) DEFAULT 'user';
+ALTER TABLE clubs
+ADD COLUMN admin_id INTEGER;
 
-ALTER TABLE users
-DROP COLUMN membership_status;
+ALTER TABLE clubs
+ADD CONSTRAINT fk_admin
+FOREIGN KEY (admin_id)
+REFERENCES users(id);
+
+-- ALTER TABLE usersADD COLUMN role VARCHAR(30) DEFAULT "user";
+
+-- UPDATE users SET role = 'site_admin' WHERE id = 17;

@@ -103,13 +103,14 @@ exports.changePassword = async (id, password) => {
     return error
   }
 };
-exports.makeAdmin = async (id) => {
+exports.makeAdmin = async (clubId, userId) => {
   try {
-    const query = `UPDATE users SET admin = admin WHERE id = $1`;
-    const values = [id];
+    const query = `UPDATE user_clubs SET admin = true WHERE club_id = $1 AND user_id = $2`;
+    const values = [clubId, userId];
     await pool.query(query, values);
   } catch (error) {
-    return error
+    return error;
   }
 };
+
 

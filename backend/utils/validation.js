@@ -192,6 +192,25 @@ const deleteMessage = () => [
 ];
 
 const paramsToInt = () => [param("id").toInt()];
+
+
+const createClub = () => [
+  body("name")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("must have a name")
+    .escape(),
+  body("passcode")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("must have a passcode")
+    .escape(),
+  body("description")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("must have a description")
+    .escape(),
+]
 module.exports = {
   validate,
   signUp,
@@ -203,4 +222,5 @@ module.exports = {
   paramsToInt,
   checkUpdateMessage,
   deleteMessage,
+  createClub,
 };
